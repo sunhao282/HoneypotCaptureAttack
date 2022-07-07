@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"honey/src/core/exec"
 	"honey/src/core/exec/protocol/docker"
+	"honey/src/core/exec/protocol/redis"
 	"honey/src/util/conf"
 )
 
@@ -29,15 +30,21 @@ func Version() {
 }
 func Run() {
 	// 启动 docker 蜜罐
-	//fmt.Println("启动docker蜜罐中.....")
 	dockerStatus := conf.Get("docker", "status")
-	//fmt.Println("dockerStatus: ", dockerStatus)
 
 	// 判断 docker 蜜罐 是否开启
 	if dockerStatus == "1" {
 		dockerAddr := conf.Get("docker", "addr")
-		//fmt.Println("dockerAddr:", dockerAddr)
 		go docker.Start(dockerAddr) //go关键字 开启并行
 	}
 	//fmt.Println("启动docker蜜罐成功！")
+
+	redisStatus := conf.Get("redis", "status")
+
+	// 判断 Redis 蜜罐 是否开启
+	if redisStatus == "1" {
+		redisAddr := conf.Get("redis", "addr")
+		go redis.Start(redisAddr)
+	}
+
 }
